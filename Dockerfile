@@ -8,7 +8,7 @@ FROM alpine:3 as bookstack
 # Renew needed ARGS
 ARG BOOKSTACK_VERSION
 # Setup needed environment variables
-ENV BOOKSTACK_VERSION=${BOOKSTACK_VERSION}}
+ENV BOOKSTACK_VERSION=${BOOKSTACK_VERSION}
 RUN apk add --no-cache curl tar
 RUN set -x; \
     curl -SL -o bookstack.tar.gz https://github.com/BookStackApp/BookStack/archive/v${BOOKSTACK_VERSION}.tar.gz  \
@@ -24,8 +24,8 @@ ARG COMPOSER_VERSION
 ARG BUILD_DATE
 ARG VCS_REF
 # Setup our ENVS
-ENV BOOKSTACK_VERSION=${BOOKSTACK_VERSION}}
-ENV COMPOSER_VERSION=${COMPOSER_VERSION}}
+ENV BOOKSTACK_VERSION=${BOOKSTACK_VERSION}
+ENV COMPOSER_VERSION=${COMPOSER_VERSION}
 
 RUN set -x; \
     apt-get update \
