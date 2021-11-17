@@ -1,6 +1,6 @@
 ## Docker Image For [BookStack](https://github.com/ssddanbrown/BookStack)
 [![Pipeline Status](https://gitlab.com/DigitalMotion/os/docker-bookstack/badges/master/pipeline.svg)](https://gitlab.com/DigitalMotion/os/docker-bookstack/-/pipelines)
-## Current Version: [21.05](https://github.com/DigitalMotionTech/docker-bookstack/blob/master/Dockerfile)
+## Current Version: [21.11](https://github.com/DigitalMotionTech/docker-bookstack/blob/master/Dockerfile)
 
 ### Changes
 In 21.05 we moved to composer 2.x and did alot of code and build cleanup - moving image creation over to Kaniko.
