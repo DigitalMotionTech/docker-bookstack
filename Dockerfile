@@ -1,5 +1,5 @@
 ARG BOOKSTACK_VERSION=22.11.1
-ARG COMPOSER_VERSION=2.0.14
+ARG COMPOSER_VERSION=2.1.12
 ARG BUILD_DATE
 ARG VCS_REF
 
@@ -17,7 +17,7 @@ RUN set -x; \
     && rm bookstack.tar.gz
 
 # Actual container used for running bookstack
-FROM php:8.1-apache as final
+FROM php:8.1-apache-buster as final
 # Renew our ARGS
 ARG BOOKSTACK_VERSION
 ARG COMPOSER_VERSION
@@ -46,10 +46,15 @@ RUN set -x; \
         curl \
         libzip-dev \
         unzip \
-    \
+   && wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb \
+   && chmod a+x ./wkhtmltox_0.12.6-1.buster_amd64.deb \
+   && apt-get install -y ./wkhtmltox_0.12.6-1.buster_amd64.deb \
+   && rm ./wkhtmltox_0.12.6-1.buster_amd64.deb \
    && docker-php-ext-install -j$(nproc) dom pdo pdo_mysql zip tidy  \
    && docker-php-ext-configure ldap --with-libdir="lib/$(gcc -dumpmachine)" \
-   && docker-php-ext-install -j$(nproc) ldap pdo_mysql zip gd
+   && docker-php-ext-install -j$(nproc) ldap \
+   && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
+   && docker-php-ext-install -j$(nproc) gd
 
 RUN a2enmod rewrite remoteip; \
     { \
