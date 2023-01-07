@@ -1,4 +1,4 @@
-ARG BOOKSTACK_VERSION=22.04.2
+ARG BOOKSTACK_VERSION=22.11.1
 ARG COMPOSER_VERSION=2.0.14
 ARG BUILD_DATE
 ARG VCS_REF
@@ -17,7 +17,7 @@ RUN set -x; \
     && rm bookstack.tar.gz
 
 # Actual container used for running bookstack
-FROM php:7.4-apache-buster as final
+FROM php:8.1-apache as final
 # Renew our ARGS
 ARG BOOKSTACK_VERSION
 ARG COMPOSER_VERSION
@@ -48,10 +48,8 @@ RUN set -x; \
         unzip \
     \
    && docker-php-ext-install -j$(nproc) dom pdo pdo_mysql zip tidy  \
-   && docker-php-ext-configure ldap \
-   && docker-php-ext-install -j$(nproc) ldap \
-   && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-   && docker-php-ext-install -j$(nproc) gd
+   && docker-php-ext-configure ldap --with-libdir="lib/$(gcc -dumpmachine)" \
+   && docker-php-ext-install -j$(nproc) ldap pdo_mysql zip gd
 
 RUN a2enmod rewrite remoteip; \
     { \
@@ -76,15 +74,23 @@ COPY docker-entrypoint.sh /bin/docker-entrypoint.sh
 
 RUN cd /var/www/bookstack \
     && mkdir /var/www/.composer \
-    && chown -R www-data:www-data /usr/local/etc/php/conf.d/ /var/www/bookstack /var/www/.composer 
+    && chown -R www-data:www-data /usr/local/etc/php/conf.d/ /var/www/bookstack /var/www/.composer \
+    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && sed -i 's/memory_limit = 128M/memory_limit = 512M/g' "$PHP_INI_DIR/php.ini"
+
+# Install composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && mv composer.phar /usr/bin/composer \
+    && chmod +x /usr/bin/composer \
+    && php -r "unlink('composer-setup.php');" 
 
 # www-data
 USER 33
 
-RUN set -x; \
-    cd /var/www/bookstack \
-    && curl -sS https://getcomposer.org/installer | php -- --version=$COMPOSER_VERSION \
-    && /var/www/bookstack/composer.phar install -v -d /var/www/bookstack/ 
+# Install deps
+RUN cd /var/www/bookstack \
+    && /usr/bin/composer install -v -d /var/www/bookstack/ 
 
 WORKDIR /var/www/bookstack
 
