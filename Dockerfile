@@ -1,5 +1,5 @@
-ARG BOOKSTACK_VERSION=22.04.2
-ARG COMPOSER_VERSION=2.0.14
+ARG BOOKSTACK_VERSION=23.02.1
+ARG COMPOSER_VERSION=2.5.4
 ARG BUILD_DATE
 ARG VCS_REF
 
@@ -17,7 +17,7 @@ RUN set -x; \
     && rm bookstack.tar.gz
 
 # Actual container used for running bookstack
-FROM php:7.4-apache-buster as final
+FROM php:8.1.17-apache as final
 # Renew our ARGS
 ARG BOOKSTACK_VERSION
 ARG COMPOSER_VERSION
@@ -47,7 +47,7 @@ RUN set -x; \
         libzip-dev \
         unzip \
     \
-   && docker-php-ext-install -j$(nproc) dom pdo pdo_mysql zip tidy  \
+   && docker-php-ext-install -j$(nproc) dom pdo pdo_mysql zip tidy xml  \
    && docker-php-ext-configure ldap \
    && docker-php-ext-install -j$(nproc) ldap \
    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
