@@ -41,13 +41,16 @@ RUN set -x; \
         libxml2-dev  \
         fontconfig  \
         fonts-freefont-ttf   \
-        wkhtmltopdf  \
         tar \
         curl \
         wget \
         libzip-dev \
         unzip \
     \
+   && wget -O /wkhtmltox.deb https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb  \
+   && chmod a+x /wkhtmltox.deb \
+   && apt-get install -y /wkhtmltox.deb \
+   && rm /wkhtmltox.deb \
    && docker-php-ext-install -j$(nproc) dom pdo pdo_mysql zip tidy xml  \
    && docker-php-ext-configure ldap \
    && docker-php-ext-install -j$(nproc) ldap \

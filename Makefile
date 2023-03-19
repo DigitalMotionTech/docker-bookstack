@@ -1,4 +1,4 @@
-DOCKER_RELEASE_REG=registry.gitlab.com/digitalmotion
+DOCKER_RELEASE_REG=registry.gitlab.com/digitalmotion/os
 DOCKER_IMAGE=docker-bookstack
 DOCKER_IMAGE_DEV=${DOCKER_IMAGE}/dev
 DOCKER_INTERNAL_TAG := "sha-$(shell git rev-parse --short HEAD)"
