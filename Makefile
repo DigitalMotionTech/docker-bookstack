@@ -1,6 +1,6 @@
-DOCKER_RELEASE_REG=digitalmotion
-DOCKER_IMAGE=bookstack
-DOCKER_IMAGE_DEV=${DOCKER_IMAGE}-dev
+DOCKER_RELEASE_REG=registry.gitlab.com/digitalmotion
+DOCKER_IMAGE=docker-bookstack
+DOCKER_IMAGE_DEV=${DOCKER_IMAGE}/dev
 DOCKER_INTERNAL_TAG := "sha-$(shell git rev-parse --short HEAD)"
 DOCKER_RELEASE_TAG := $(shell git describe)
 BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
