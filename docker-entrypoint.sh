@@ -77,7 +77,9 @@ if [ ! -f ".env" ]; then
       MAIL_USERNAME=${MAIL_USERNAME:-null}
       MAIL_PASSWORD=${MAIL_PASSWORD:-null}
       MAIL_ENCRYPTION=${MAIL_ENCRYPTION:-null}
-      # URL used for social login redirects, NO TRAILING SLASH
+      
+      # Setup for PDF Printing
+      WKHTMLTOPDF=/usr/local/bin/wkhtmltopdf
 EOF
     else
         echo >&2 'error: missing DB_HOST environment variable'
