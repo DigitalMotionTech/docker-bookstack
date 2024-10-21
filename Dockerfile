@@ -1,5 +1,5 @@
-ARG BOOKSTACK_VERSION=23.02.1
-ARG COMPOSER_VERSION=2.5.4
+ARG BOOKSTACK_VERSION=23.098.3
+ARG COMPOSER_VERSION=2.6.5
 ARG BUILD_DATE
 ARG VCS_REF
 
@@ -17,7 +17,7 @@ RUN set -x; \
     && rm bookstack.tar.gz
 
 # Actual container used for running bookstack
-FROM php:8.1.17-apache as final
+FROM php:8.2-apache-bookworm as final
 # Renew our ARGS
 ARG BOOKSTACK_VERSION
 ARG COMPOSER_VERSION
@@ -47,11 +47,11 @@ RUN set -x; \
         libzip-dev \
         unzip \
     \
-   && wget -O /wkhtmltox.deb https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb  \
+   && wget -O /wkhtmltox.deb https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb  \
    && chmod a+x /wkhtmltox.deb \
    && apt-get install -y /wkhtmltox.deb \
    && rm /wkhtmltox.deb \
-   && docker-php-ext-install -j$(nproc) dom pdo pdo_mysql zip tidy xml  \
+   && docker-php-ext-install -j$(nproc) dom pdo pdo_mysql zip tidy xml \
    && docker-php-ext-configure ldap \
    && docker-php-ext-install -j$(nproc) ldap \
    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
